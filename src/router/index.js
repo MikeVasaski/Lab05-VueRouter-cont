@@ -29,7 +29,7 @@ const routes = [
     props: true,
     beforeEnter: (to) => {
       return EventService.getEvent(to.params.id) //Return and params.id
-        .this((response) => {
+        .then((response) => {
           // Still need to set the data here
           GStore.event = response.data // <-- Store the event
         })
