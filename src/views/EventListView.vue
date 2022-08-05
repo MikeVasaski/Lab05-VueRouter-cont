@@ -6,7 +6,6 @@
       :key="event.id"
       :event="event"
     ></EventCard>
-
     <div class="pagination">
       <router-link
         id="page-prev"
@@ -33,7 +32,7 @@
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService.js'
-import { watchEffect } from '@vue/runtime-core'
+
 export default {
   name: 'EventListView',
   props: {
@@ -53,7 +52,7 @@ export default {
   },
   // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-    EventService.getEvents(2, parseInt(routeTo.query.page || 1))
+    EventService.getEvents(3, parseInt(routeTo.query.page || 1))
       .then((response) => {
         next((comp) => {
           comp.events = response.data
@@ -65,31 +64,19 @@ export default {
       })
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
-    EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
+    EventService.getEvents(3, parseInt(routeTo.query.page) || 1)
       .then((response) => {
         this.events = response.data // <-----
-        this.totalEvents = response.headers['x-total-cont'] // <-----
+        this.totalEvents = response.headers['x-total-count'] // <-----
         next() // <-----
       })
       .catch(() => {
         next({ name: 'NetworkError' })
       })
   },
-  created() {
-    watchEffect(() => {
-      EventService.getEvents(2, this.page)
-        .then((response) => {
-          this.events = response.data
-          this.totalEvents = response.headers['x-total-count']
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    })
-  },
   computed: {
     hasNextPage() {
-      let totalPages = Math.ceil(this.totalEvents / 2)
+      let totalPages = Math.ceil(this.totalEvents / 3)
       return this.page < totalPages
     }
   }
