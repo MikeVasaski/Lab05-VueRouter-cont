@@ -6,7 +6,6 @@
       :key="event.id"
       :event="event"
     ></EventCard>
-
     <div class="pagination">
       <router-link
         id="page-prev"
@@ -68,7 +67,7 @@ export default {
     EventService.getEvents(3, parseInt(routeTo.query.page) || 1)
       .then((response) => {
         this.events = response.data // <-----
-        this.totalEvents = response.headers['x-total-cont'] // <-----
+        this.totalEvents = response.headers['x-total-count'] // <-----
         next() // <-----
       })
       .catch(() => {
